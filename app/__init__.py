@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from flask_cors import CORS
 from .config import config_map
 from .extensions import db, jwt
@@ -33,5 +33,9 @@ def create_app(env="development"):
     @app.get("/health")
     def health():
         return jsonify({"status": "ok"}), 200
+
+    @app.get("/")
+    def index():
+        return render_template("index.html")
 
     return app
