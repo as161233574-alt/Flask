@@ -1,0 +1,23 @@
+version: "3.9"
+
+# 生产环境：使用 GHCR 上的预构建镜像（不在服务器上 build）
+# 部署命令：docker compose -f docker-compose.prod.yml up -d
+
+services:
+  web:
+    image: ghcr.io/${GHCR_OWNER}/flask-user-system:latest
+    ports:
+      - "8000:8000"
+    env_file: .env
+    volumes:
+      - sqlite_data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  sqlite_data:
